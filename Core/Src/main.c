@@ -21,6 +21,7 @@
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
+#include "at24_eeprom.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -90,18 +91,36 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  const char wmsg[] = "Some data"; //Данные которые хотим записать в EEPROM
+  char rmsg[sizeof(wmsg)]; //Массив в который будем записывать прочитанные данные из EEPROM
+  uint8_t str[100]; //Массив для красивого форматирования для отправки через Serial (не обязательно)
+
+  uint16_t memAddr = 0x0000; //Адрес в байтах с нулевого значения в памяти EEPROM
+
+  //Раскомментируйте строчки ниже, чтобы записать значение в EEPROM
+  /*
+  bool write_done = false;
+
+  while (!write_done)
+  {
+	  if (at24_isConnected())
+	  {
+		  at24_write(memAddr, wmsg, sizeof(wmsg), 100); // Записываем данные из wmsg в EEPROM
+		  write_done = true;
+	  }
+	  else
+	  {
+		  HAL_Delay(100);
+	  }
+  }
+  */
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  const char wmsg[] = "Some data"; //Данные которые хотим записать в EEPROM
-	  char rmsg[sizeof(wmsg)]; //Массив в который будем записывать прочитанные данные из EEPROM
-	  uint8_t str[100]; //Массив для красивого форматирования для отправки через Serial (не обязательно)
-
-	  uint16_t memAddr = 0x0000; //Адрес в памяти EEPROM
-
 	  if (at24_isConnected()) //Проверяем есть ли связь EEPROM
 	  {
 		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 1); //Если есть зажигаем LED 1
@@ -111,13 +130,11 @@ int main(void)
 		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0); //Если нет LED 1 не горит
 	  }
 
-	  at24_write(memAddr, wmsg, sizeof(wmsg), 100); // Записываем данные из wmsg в EEPROM
-
-	  if(at24_read(memAddr, rmsg, sizeof(wmsg), 100)) //Читаем данные из EEPROM в rmsg
+	  if(at24_read(memAddr0, rmsg, sizeof(wmsg), 100)) //Читаем данные из EEPROM в rmsg
 		{
 		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); //Мигаем LED 2, если все ок
 		  sprintf(str, "Data: %s \r\n", rmsg); //Собираем красивую строку для Serial
-		  HAL_UART_Transmit_IT(&huart2, str, sizeof(wmsg)+8); //Отправляем по Serial
+		  HAL_UART_Transmit_IT(&huart2, str, sizeof(rmsg)+8); //Отправляем по Serial
 		  HAL_Delay(1000);
 		}
 	  else
@@ -125,8 +142,6 @@ int main(void)
 		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); //Мигаем LED 1, если НЕ ок
 		  HAL_Delay(1000);
 	  }
-
-
 
     /* USER CODE END WHILE */
 
