@@ -5,7 +5,7 @@
 ## Установка
 Скачайте файлы `at24_eeprom.c` в `/src`, а файл `at24_eeprom.h` в `/inc`, вашего проекта, сконфигурируйте I2C следующим образом:
 
-*сконфигурируйте I2C следующим образом: ![alt text](https://github.com/VBCores/G4_EEPROM/tree/main/img/i2C.jpg?raw=true)
+![alt text](https://github.com/VBCores/G4_EEPROM/blob/main/img/i2C.jpg?raw=true)
 
 включите прерывания для I2C
 
