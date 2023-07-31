@@ -94,6 +94,7 @@ int main(void)
   const char wmsg[] = "Some data"; //Данные которые хотим записать в EEPROM
   char rmsg[sizeof(wmsg)]; //Массив в который будем записывать прочитанные данные из EEPROM
   uint8_t str[100]; //Массив для красивого форматирования для отправки через Serial (не обязательно)
+  uint8_t simbol = 0;
 
   uint16_t memAddr = 0x0000; //Адрес в байтах с нулевого значения в памяти EEPROM
 
@@ -130,19 +131,21 @@ int main(void)
 		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0); //Если нет LED 1 не горит
 	  }
 
-	  if(at24_read(memAddr0, rmsg, sizeof(wmsg), 100)) //Читаем данные из EEPROM в rmsg
-		{
-		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); //Мигаем LED 2, если все ок
-		  sprintf(str, "Data: %s \r\n", rmsg); //Собираем красивую строку для Serial
-		  HAL_UART_Transmit_IT(&huart2, str, sizeof(rmsg)+8); //Отправляем по Serial
-		  HAL_Delay(1000);
-		}
-	  else
+	  for(simbol = 0; simbol < sizeof(wmsg)+1; simbol++) //Пробегаем по значениям посимвольно
 	  {
-		  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); //Мигаем LED 1, если НЕ ок
-		  HAL_Delay(1000);
+		  if(at24_read(memAddr + simbol, rmsg, 1, 100)) //Читаем данные из EEPROM в rmsg посимвольно
+			{
+			  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); //Мигаем LED 2, если все ок
+			  sprintf(str, "Data: %s \r\n", rmsg); //Собираем красивую строку для Serial
+			  HAL_UART_Transmit_IT(&huart2, str, sizeof(rmsg)+8); //Отправляем по Serial
+			  HAL_Delay(200);
+			}
+		  else
+		  {
+			  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); //Мигаем LED 1, если НЕ ок
+			  HAL_Delay(200);
+		  }
 	  }
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
