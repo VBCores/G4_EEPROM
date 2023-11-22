@@ -12,7 +12,7 @@
 /********************************* Configuration Start *********************************/
 #define		_EEPROM_SIZE_KBIT		64       /* 64K (8 192 x 8) */
 #define		_EEPROM_I2C			hi2c4
-#define		_EEPROM_USE_FREERTOS		0  /* NOT FreeRTOS by default */
+#define		_EEPROM_USE_FREERTOS		1  /* FreeRTOS by default */
 #define		_EEPROM_ADDRESS			0xA0
 #define		_EEPROM_USE_WP_PIN		0
 #define		_EEPROM_USE_IWDG		0
@@ -40,6 +40,16 @@ extern "C" {
 #include <stdint.h>
 #include <stddef.h>
 
+struct joint_config
+{
+	int number;
+	float upper_limit;
+	float lower_limit;
+	float zero;
+};
+
+typedef struct joint_config joint_config;
+
 /**
   * @brief  Checks if memory device is ready for communication.
   * @param  none
@@ -52,7 +62,7 @@ bool at24_isConnected(void);
   * @param  address Internal memory address
   * @param  data Pointer to data buffer
   * @param  len Amount of data to be sent
-  * @param  timeout Timeout duration (optional, 100 ms by default)
+  * @param  timeout Timeout duration (optional)
   * @retval bool status
   */
 bool at24_write(uint16_t address, uint8_t *data, size_t lenInBytes, uint32_t timeout);
@@ -62,7 +72,7 @@ bool at24_write(uint16_t address, uint8_t *data, size_t lenInBytes, uint32_t tim
   * @param  address Internal memory address
   * @param  data Pointer to data buffer
   * @param  len Amount of data to be sent
-  * @param  timeout Timeout duration (optional, 100 ms by default)
+  * @param  timeout Timeout duration (optional)
   * @retval bool status
   */
 bool at24_read(uint16_t address, uint8_t *data, size_t lenInBytes, uint32_t timeout);
@@ -74,6 +84,9 @@ bool at24_read(uint16_t address, uint8_t *data, size_t lenInBytes, uint32_t time
   * @retval bool status
   */
 bool at24_eraseChip(void);
+
+void jc_write(joint_config * jc);
+void jc_read(joint_config * jc);
 
 #ifdef __cplusplus
 }

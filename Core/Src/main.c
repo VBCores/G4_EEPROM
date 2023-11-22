@@ -18,14 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
-#include "at24_eeprom.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "at24_eeprom.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,11 +45,14 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+joint_config jc_w = {1, 0.6, 0.1, 0.2};
+joint_config jc_r = {2, 0.1, 0.2, 0.3};
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -91,68 +94,33 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  const char wmsg[] = "Some data"; //Данные которые хотим записать в EEPROM
-  char rmsg[sizeof(wmsg)]; //Массив в который будем записывать прочитанные данные из EEPROM
-  uint8_t str[100]; //Массив для красивого форматирования для отправки через Serial (не обязательно)
-  uint8_t simbol = 0;
+  jc_write(&jc_w); //write joint state config structure to EEPROM
 
-  uint16_t memAddr = 0x0000; //Адрес в байтах с нулевого значения в памяти EEPROM
-
-  //Раскомментируйте строчки ниже, чтобы записать значение в EEPROM
-  /*
-  bool write_done = false;
-
-  while (!write_done)
-  {
-	  if (at24_isConnected())
-	  {
-		  at24_write(memAddr, wmsg, sizeof(wmsg), 100); // Записываем данные из wmsg в EEPROM
-		  write_done = true;
-	  }
-	  else
-	  {
-		  HAL_Delay(100);
-	  }
-  }
-  */
+  jc_read(&jc_r); //read joint state config structure from EEPROM
 
   /* USER CODE END 2 */
 
+  /* Init scheduler */
+  //osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
+  //MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  //osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (at24_isConnected()) //Проверяем есть ли связь EEPROM
-	  {
-		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 1); //Если есть зажигаем LED 1
-	  }
-	  else
-	  {
-		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0); //Если нет LED 1 не горит
-	  }
 
-	  for(simbol = 0; simbol < sizeof(wmsg)+1; simbol++) //Пробегаем по значениям посимвольно
-	  {
-		  if(at24_read(memAddr + simbol, rmsg, 1, 100)) //Читаем данные из EEPROM в rmsg посимвольно
-			{
-			  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); //Мигаем LED 2, если все ок
-			  sprintf(str, "Data: %s \r\n", rmsg); //Собираем красивую строку для Serial
-			  HAL_UART_Transmit_IT(&huart2, str, sizeof(rmsg)+8); //Отправляем по Serial
-			  HAL_Delay(200);
-			}
-		  else
-		  {
-			  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); //Мигаем LED 1, если НЕ ок
-			  HAL_Delay(200);
-		  }
-	  }
+HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_2);
+HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
-}
 
+  /* USER CODE END 3 */
+  }}
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -200,49 +168,7 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 /*
-void CTRL_Reg_Set(){
-	uint16_t TX = 0x0000;
-	TX += (0x03 << 10); // 850 ns dead time
-	TX += (0x03 << 8); // Gain of 40
-	TX += (1 << 3); // 1/4 stepn
-	TX += 0x01 ; // Enable motor
-	RegAccess(WRITE, 0x00, TX); // write CTRL Register (Address = 0x00)
-	return;
-}
 
-void TORQUE_Reg_Set(){
-	uint16_t TX = 0x0000;
-	TX += (0x01 << 8); // sample time = 100 us
-	TX += 0x01; // Torque = 0x3F
-//	TX = 0b0001000100000001;
-	RegAccess(WRITE, 0x01, TX); // write TORQUE Register (Address = 0x01)
-	return;
-}
-
-void STATUS_Reg_Set(){
-	RegAccess(WRITE, 0x07, 0x0000); // write STATUS Register (Address = 0x00)
-}
-
-
-
-uint16_t RegAccess(uint8_t operation, uint8_t address, uint16_t value)
-{
-  uint16_t parcel = value;
-
-  parcel += (address << 12); // register address
-  parcel += (operation << 15); // read-write operation choice
-
-  uint16_t received = 0;
-
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
- // HAL_Delay(1);
-  HAL_SPI_TransmitReceive(&hspi1, (uint8_t*)&parcel, (uint8_t*)&received, 1, 1000);
- // HAL_Delay(1);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
- // HAL_Delay(1);
-  received &= ~0xF000; // clear upper 4 bits, leave lower 12 bits
-
-  return received;
 */
 /* USER CODE END 4 */
 

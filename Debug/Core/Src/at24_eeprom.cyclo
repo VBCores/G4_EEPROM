@@ -2,3 +2,5 @@
 ../Core/Src/at24_eeprom.c:54:6:at24_write	6
 ../Core/Src/at24_eeprom.c:124:6:at24_read	3
 ../Core/Src/at24_eeprom.c:162:6:at24_eraseChip	3
+../Core/Src/at24_eeprom.c:176:6:jc_write	2
+../Core/Src/at24_eeprom.c:193:6:jc_read	2

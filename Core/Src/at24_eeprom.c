@@ -84,7 +84,7 @@ bool at24_write(uint16_t address, uint8_t *data, size_t len, uint32_t timeout)
     if (HAL_I2C_Mem_Write(&_EEPROM_I2C, _EEPROM_ADDRESS, address, I2C_MEMADD_SIZE_16BIT, data, w, 100) == HAL_OK)
     #endif
     {
-      at24_delay(10);
+      at24_delay(1);
       len -= w;
       data += w;
       address += w;
@@ -161,8 +161,7 @@ bool at24_read(uint16_t address, uint8_t *data, size_t len, uint32_t timeout)
   */
 bool at24_eraseChip(void)
 {
-  const uint8_t eraseData[32] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF\
-    , 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+  const uint8_t eraseData[32] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
   uint32_t bytes = 0;
   while ( bytes < (_EEPROM_SIZE_KBIT * 128))
   {
@@ -172,5 +171,40 @@ bool at24_eraseChip(void)
   }
   return true;
 }
+
+
+void jc_write(joint_config * jc)
+{
+	uint16_t address = 0x00;
+	int timeout = 100;
+	if (at24_isConnected())
+	{
+		at24_write(address, &jc->number, sizeof(&jc->number), timeout);
+		address += sizeof(&jc->number);
+		at24_write(address, &jc->upper_limit, sizeof(&jc->upper_limit), timeout);
+		address +=sizeof(&jc->upper_limit);
+		at24_write(address, &jc->lower_limit, sizeof(&jc->lower_limit), timeout);
+		address +=sizeof(&jc->lower_limit);
+		at24_write(address, &jc->zero, sizeof(&jc->zero), timeout);
+	}
+}
+
+
+void jc_read(joint_config * jc)
+{
+	uint16_t address = 0x00;
+	int timeout = 100;
+	if (at24_isConnected())
+		{
+		at24_read(address, &jc->number, sizeof(&jc->number), timeout);
+		address += sizeof(&jc->number);
+		at24_read(address, &jc->upper_limit, sizeof(&jc->upper_limit), timeout);
+		address +=sizeof(&jc->upper_limit);
+		at24_read(address, &jc->lower_limit, sizeof(&jc->lower_limit), timeout);
+		address +=sizeof(&jc->lower_limit);
+		at24_read(address, &jc->zero, sizeof(&jc->zero), timeout);
+		}
+}
+
 
 /* EOF */
