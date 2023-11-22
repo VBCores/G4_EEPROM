@@ -1,6 +1,6 @@
 Core/Src/at24_eeprom.o: ../Core/Src/at24_eeprom.c \
- ../Core/Inc/at24_eeprom.h ../Core/Inc/i2c.h ../Core/Inc/main.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
+ ../Core/Inc/at24_eeprom.h ../Core/Inc/joint_config.h ../Core/Inc/i2c.h \
+ ../Core/Inc/main.h ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h \
@@ -41,6 +41,7 @@ Core/Src/at24_eeprom.o: ../Core/Src/at24_eeprom.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 ../Core/Inc/at24_eeprom.h:
+../Core/Inc/joint_config.h:
 ../Core/Inc/i2c.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:

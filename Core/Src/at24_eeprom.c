@@ -181,6 +181,8 @@ void jc_write(joint_config * jc)
 	{
 		at24_write(address, &jc->number, sizeof(&jc->number), timeout);
 		address += sizeof(&jc->number);
+		at24_write(address, &jc->motor_type, sizeof(&jc->motor_type), timeout);
+		address += sizeof(&jc->motor_type);
 		at24_write(address, &jc->upper_limit, sizeof(&jc->upper_limit), timeout);
 		address +=sizeof(&jc->upper_limit);
 		at24_write(address, &jc->lower_limit, sizeof(&jc->lower_limit), timeout);
@@ -198,6 +200,8 @@ void jc_read(joint_config * jc)
 		{
 		at24_read(address, &jc->number, sizeof(&jc->number), timeout);
 		address += sizeof(&jc->number);
+		at24_read(address, &jc->motor_type, sizeof(&jc->motor_type), timeout);
+		address += sizeof(&jc->motor_type);
 		at24_read(address, &jc->upper_limit, sizeof(&jc->upper_limit), timeout);
 		address +=sizeof(&jc->upper_limit);
 		at24_read(address, &jc->lower_limit, sizeof(&jc->lower_limit), timeout);

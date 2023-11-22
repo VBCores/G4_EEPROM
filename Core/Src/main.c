@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "at24_eeprom.h"
+#include "joint_config.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,8 +46,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-joint_config jc_w = {1, 0.6, 0.1, 0.2};
-joint_config jc_r = {2, 0.1, 0.2, 0.3};
+joint_config jc_w = {1.0, 22.0, 0.6, 0.1, 0.2};
+joint_config jc_r = {2.0, 1.0, 0.1, 0.2, 0.3};
 
 /* USER CODE END PV */
 

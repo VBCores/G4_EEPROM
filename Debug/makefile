@@ -64,8 +64,8 @@ all: main-build
 main-build: G4_EEPROM.elf secondary-outputs
 
 # Tool invocations
-G4_EEPROM.elf G4_EEPROM.map: $(OBJS) $(USER_OBJS) C:\Users\VR\STM32CubeIDE\workspace_1.8.0\G4_EEPROM\STM32G474RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "G4_EEPROM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\VR\STM32CubeIDE\workspace_1.8.0\G4_EEPROM\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="G4_EEPROM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+G4_EEPROM.elf G4_EEPROM.map: $(OBJS) $(USER_OBJS) C:\projects\STM32_AT50xx_EEPROM\STM32G474RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "G4_EEPROM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\projects\STM32_AT50xx_EEPROM\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="G4_EEPROM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

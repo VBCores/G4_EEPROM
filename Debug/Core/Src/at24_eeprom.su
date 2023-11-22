@@ -3,4 +3,4 @@
 ../Core/Src/at24_eeprom.c:124:6:at24_read	40	static
 ../Core/Src/at24_eeprom.c:162:6:at24_eraseChip	56	static
 ../Core/Src/at24_eeprom.c:176:6:jc_write	24	static
-../Core/Src/at24_eeprom.c:193:6:jc_read	24	static
+../Core/Src/at24_eeprom.c:195:6:jc_read	24	static

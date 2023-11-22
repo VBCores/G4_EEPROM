@@ -39,16 +39,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
-
-struct joint_config
-{
-	int number;
-	float upper_limit;
-	float lower_limit;
-	float zero;
-};
-
-typedef struct joint_config joint_config;
+#include "joint_config.h"
 
 /**
   * @brief  Checks if memory device is ready for communication.
