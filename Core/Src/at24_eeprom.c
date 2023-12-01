@@ -123,6 +123,7 @@ bool at24_write(uint16_t address, uint8_t *data, size_t len, uint32_t timeout)
   */
 bool at24_read(uint16_t address, uint8_t *data, size_t len, uint32_t timeout)
 {
+	at24_delay(1);
   #if (EEPROM_USE_IWDG)
 		HAL_IWDG_Refresh(&_EEPROM_IWDG);
   #endif
@@ -161,7 +162,7 @@ bool at24_read(uint16_t address, uint8_t *data, size_t len, uint32_t timeout)
   */
 bool at24_eraseChip(void)
 {
-  const uint8_t eraseData[32] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+  const uint8_t eraseData[32] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
   uint32_t bytes = 0;
   while ( bytes < (_EEPROM_SIZE_KBIT * 128))
   {
@@ -180,14 +181,19 @@ void jc_write(joint_config * jc)
 	if (at24_isConnected())
 	{
 		at24_write(address, &jc->number, sizeof(&jc->number), timeout);
+		at24_delay(1);
 		address += sizeof(&jc->number);
 		at24_write(address, &jc->motor_type, sizeof(&jc->motor_type), timeout);
+		at24_delay(1);
 		address += sizeof(&jc->motor_type);
 		at24_write(address, &jc->upper_limit, sizeof(&jc->upper_limit), timeout);
+		at24_delay(1);
 		address +=sizeof(&jc->upper_limit);
 		at24_write(address, &jc->lower_limit, sizeof(&jc->lower_limit), timeout);
+		at24_delay(1);
 		address +=sizeof(&jc->lower_limit);
 		at24_write(address, &jc->zero, sizeof(&jc->zero), timeout);
+		at24_delay(1);
 	}
 }
 

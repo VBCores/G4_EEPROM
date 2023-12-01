@@ -46,8 +46,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-joint_config jc_w = {1.0, 22.0, 0.6, 0.1, 0.2};
-joint_config jc_r = {2.0, 1.0, 0.1, 0.2, 0.3};
+joint_config jc_w = {3, 22, 6, 1, 2};
+joint_config jc_r = {5, 5, 5, 5, 5};
 
 /* USER CODE END PV */
 
@@ -94,6 +94,10 @@ int main(void)
   MX_I2C4_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  jc_read(&jc_r);
+
+  //at24_eraseChip();
+  jc_read(&jc_r);
 
   jc_write(&jc_w); //write joint state config structure to EEPROM
 
